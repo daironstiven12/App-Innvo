@@ -1,0 +1,72 @@
+CREATE DATABASE IF NOT EXISTS academico_app
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE academico_app;
+
+CREATE TABLE estudiantes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    carrera VARCHAR(255) NOT NULL,
+    institucion VARCHAR(255) NOT NULL,
+    iniciales VARCHAR(10) NOT NULL,
+    correo VARCHAR(255),
+    telefono VARCHAR(50),
+    direccion VARCHAR(255),
+    ingreso VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE periodos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    activo TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE materias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    docente VARCHAR(255) NOT NULL DEFAULT '',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE horario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    dia VARCHAR(20) NOT NULL,
+    inicio VARCHAR(10) NOT NULL,
+    fin VARCHAR(10) NOT NULL,
+    materia_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (materia_id) REFERENCES materias(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE calificaciones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    materia_id INT NOT NULL,
+    nota DECIMAL(4,2) NOT NULL,
+    periodo_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (materia_id) REFERENCES materias(id) ON DELETE CASCADE,
+    FOREIGN KEY (periodo_id) REFERENCES periodos(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE comparativas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    categoria VARCHAR(255) NOT NULL,
+    grupo_label VARCHAR(50) NOT NULL,
+    valor DECIMAL(4,2) NOT NULL,
+    color VARCHAR(20) NOT NULL,
+    periodo_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (periodo_id) REFERENCES periodos(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE comunicados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    mensaje TEXT,
+    fecha DATE NOT NULL,
+    tipo VARCHAR(50) NOT NULL DEFAULT 'general',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
